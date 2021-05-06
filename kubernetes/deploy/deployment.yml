@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-haha
+spec:
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: project-haha
+  template:
+    spec:
+      containers:
+        - name: project-haha
+          image: fake-image
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 0.1
+            limits:
+              memory: 512Mi
+              cpu: 1.0
+          ports:
+            - containerPort: 80
+              name: http
+          envFrom:
+          - configMapRef:
+              name: project-haha-config
+          env:
+          - name: SERVER_PORT
+            value: "80"
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name

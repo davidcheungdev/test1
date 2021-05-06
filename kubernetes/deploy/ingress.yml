@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: project-haha
+  annotations:
+    # nginx ingress
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    # cert-manager
+    ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: clusterissuer-letsencrypt-production
+    # CORS
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://project-haha.zero-david.online"
+
+spec:
+  rules:
+  - host: project-haha.zero-david.online
+    http:
+      paths:
+        - path: /(.*)
+          backend:
+            serviceName: python-app
+            servicePort: http
+  tls:
+  - hosts:
+    - project-haha.zero-david.online
+    secretName: project-haha-tls-secret
